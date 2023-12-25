@@ -4,7 +4,7 @@ import seaborn as sns
 
 ### importdata ###
 
-df = pd.read_csv('all_df.csv')
+df = pd.read_csv('Dashboard/all_df.csv')
 df["order_purchase_timestamp"] = pd.to_datetime(df["order_purchase_timestamp"])
 
 
