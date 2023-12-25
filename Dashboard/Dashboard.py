@@ -4,7 +4,7 @@ import seaborn as sns
 
 ### importdata ###
 
-df = pd.read_csv('customer_order.csv')
+df = pd.read_csv('all_df.csv')
 df["order_purchase_timestamp"] = pd.to_datetime(df["order_purchase_timestamp"])
 
 
@@ -13,7 +13,7 @@ df["order_purchase_timestamp"] = pd.to_datetime(df["order_purchase_timestamp"])
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
 st.title("Total Orders/Invoice from E-Commerce 2017-2018 :bar_chart:")
-st.markdown("Analysis dashboard that explains growth of **total order by some state(s)** and compare it to growth of **total order by all states** :chart_with_upwards_trend:")
+st.markdown("Analysis dashboard that explains growth of **total order by product category** and compare it to total growth :chart_with_upwards_trend:")
 
 col1, col2 = st.columns((2))
 
@@ -29,11 +29,11 @@ with col2:
 df = df[(df["order_purchase_timestamp"] >= date1) & (df["order_purchase_timestamp"] <= date2)].copy()
 
 st.sidebar.header("Filter: ")
-state = st.sidebar.multiselect("Pick the State(s)", df["customer_state"].unique(), ["SP", "RJ", "MG", "RS", "PR"])
+state = st.sidebar.multiselect("Pick product category", df["product_category_name"].unique(), ["beleza_saude","cama_mesa_banho","utilidades_domesticas","esporte_lazer","moveis_decoracao"])
 if not state:
     df2 = df.copy()
 else:
-    df2 = df[df["customer_state"].isin(state)]
+    df2 = df[df["product_category_name"].isin(state)]
 
 #data for chart
 
@@ -44,7 +44,7 @@ state_df = df2.set_index("order_purchase_timestamp")["order_id"].resample("M").n
 #chart
 
 with col1:
-    st.subheader("Total Order/Invoice by All States")
+    st.subheader("Total Order/Invoice all Product Categories")
     fig = px.line(invoice_df, x = invoice_df.index, y = "order_id",
                   labels={
                       "order_purchase_timestamp": "Month",
@@ -54,7 +54,7 @@ with col1:
     st.plotly_chart(fig,use_container_width=True, height = 200)
 
 with col2:
-    st.subheader("Total Order/Invoice by State(s)")
+    st.subheader("Total Order/Invoice by Product Category(es)")
     fig = px.line(state_df, x =state_df.index, y = "order_id",
                   labels={
                       "order_purchase_timestamp": "Month",
